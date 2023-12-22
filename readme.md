@@ -40,7 +40,7 @@ xhr.onload=function(){
 
 //執行請求及傳送內容
 //表單資料
-let context="name=john&age=32";
+let context="name=john&age=32";//給對方GET的資料
 
 //json資料
 let context=JSON.stringify({name:'john',age:32})

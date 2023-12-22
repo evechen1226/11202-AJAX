@@ -10,9 +10,11 @@
 </head>
 <body>
     <h1 class="header">XMLHttpRequest</h1>
-    <div class="title"></div>
-    <h4></h4>
-    <ul></ul>
+    <h4 class="title"></h4>
+    <div class="updated"></div>
+    <ul class="list-group"></ul>
+    <script src="./plugin/js/jquery.js"></script>
+    <script src="./plugin/js/bootstrap.js"></script>
 
 </body>
 </html>
@@ -26,14 +28,31 @@
     ********************************************************/
 
     //宣告一個XMLHttpRequest物件
-
+let xhr=new XMLHttpRequest;
 
     //建立請求的各項設定及實質內容
+    //async-非同步：預設
+    //sync-同步
 
+    xhr.open(
+    `GET`, //Method：get,post,put,patch,delete
+    `https://kktix.com/events.json`,
+    async);
 
+    //宣告回傳值的type
+    xhr.responseType = 'json';
+    
     //建立得到回應時的各項設定及行為
+
+    xhr.onload=function(){  
+    let type=xhr.getResponseHeader("Content-Type");
+    let status=xhr.status//狀態碼：200、302、404
+    let response=xhr.responseText//回應的資料全部轉為文字
+    let res = JSON.parse(response)//轉換文字為 JSON格式{....}
+    document.write(response)//HTML
+}
 
 
     //送出請求
-
+    xhr.send()//不傳送資料給對方
     </script>
