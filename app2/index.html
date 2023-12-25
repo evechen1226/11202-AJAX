@@ -8,7 +8,7 @@
   <title>學生資料管理系統</title>
   <link rel="shortcut icon" href="#" type="image/x-icon">
   <link rel="stylesheet" href="../plugin/css/bootstrap.css">
-  <script src="../plugin/js/bootstrap.bundle.js"></script>
+
   <link rel="stylesheet" href="style.css">
   <!---匯入要使用的函式庫--->
   <script src="jquery.js"></script>
@@ -16,8 +16,7 @@
 </head>
 
 <body>
-  <h1 class="header">學生資料管理系統</h1>
-  <button class="btn btn-primary mx-2 my-2" data-bs-toggle="modal" data-bs-target="#myModal">新增資料</button>
+  <h1 class="header">學生資料管理系統<button class="btn btn btn-primary mx-3" onclick="popForm('add')">+新增</button></h1>
   <div class="container d-flex">
     <div class="sex mx-2 my-3">
       <button class="btn btn-primary mx-2 my-2" onclick="query('sex',1)">男生</button>
@@ -26,103 +25,52 @@
     <div class="classes mx-2 my-3">
     </div>
   </div>
+
   <div class="users d-flex flex-wrap mx-auto my-3" style="width:64%"></div>
-  <div class="stundent-from">
-    <!-- The Modal -->
-    <div class="modal" id="myModal">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
 
-          <!-- Modal Header -->
-          <div class="modal-header">
-            <h4 class="modal-title">新增學生</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
+  <div id="modals">
 
-          <!-- Modal body -->
-          <div class="modal-body">
-          <form action="./api/insert.php">
-            <div class="mb-3 col-6">
-              <label for="exampleFormControlInput1" class="form-label">學號</label>
-              <input type="text" class="form-control" id="school_num">
-            </div>
-            <div class="mb-3 col-6">
-              <label for="exampleFormControlInput1" class="form-label">學號</label>
-              <input type="text" class="form-control" id="exampleFormControlInput1">
-            </div>
-
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">學號</label>
-              <input type="text" class="form-control" id="exampleFormControlInput1">
-            </div>
-
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">學號</label>
-              <input type="text" class="form-control" name="exampleFormControlInput1" id="exampleFormControlInput1">
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">學號</label>
-              <input type="text" class="form-control"  name="exampleFormControlInput1" id="exampleFormControlInput1">
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">學號</label>
-              <input type="text" class="form-control"  name="exampleFormControlInput1" id="exampleFormControlInput1">
-            </div>
-
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">家長</label>
-              <input type="email" class="form-control"  name="parents" id="parents">
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">電話</label>
-              <input type="email" class="form-control"  name="tel" id="tel">
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">科別</label>
-              <input type="email" class="form-control"  name="dept" id="dept">
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">畢業國中</label>
-              <input type="email" class="form-control" name="graduate_at" id="graduate_at">
-            </div>
-
-</form>
-            id
-            school_num
-            學號
-            name
-            姓名
-            birthday
-            出生年月日
-            uni_id
-            身分證號碼
-            addr
-            住址
-            
-            
-            
-            
-            
-            
-            
-            
-
-            
-          </div>
-
-          <!-- Modal footer -->
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-          </div>
-
-        </div>
-      </div>
-    </div>
   </div>
 
+  <script src="../plugin/js/bootstrap.bundle.js"></script>
 </body>
 
 </html>
 <script>
+  //宣告modal
+  /*   const stuModal = new bootstrap.Modal('#studentForm', {
+      keyboard: false
+    })
+  
+    $("#studentForm").on('show.bs.modal', () => {
+      $.get("./api/get_schools.php", (options) => {
+        $("#schools").html(options)
+      })
+    }) */
+  let stuModal
+  function popForm(type, id = null) {
+    $.get('./api/user_form.php', (form) => {
+      //先把表單放到#modal裏
+      $("#modals").html(form)
+
+      //宣告modal物件
+      stuModal = new bootstrap.Modal('#studentForm', {
+        keyboard: false
+      })
+
+      //註冊modal的顯示事件
+      $("#studentForm").on('show.bs.modal', () => {
+        $.get("./api/get_schools.php", (options) => {
+          $("#schools").html(options)
+        })
+      })
+
+      //觸發顯示
+      stuModal.show("studentForm")
+
+    })
+  }
+
   /************************************
   * 1.考慮觸發行為的事件
   * 2.建立監聽行為
