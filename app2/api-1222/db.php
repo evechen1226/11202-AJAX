@@ -3,15 +3,13 @@ date_default_timezone_set("Asia/Taipei");
 session_start();
 class DB{
 
-    protected $dsn = "mysql:host=localhost;charset=utf8;dbname=school";
-    //protected $dsn = "mysql:host=localhost;charset=utf8;dbname=bquiz";
+    protected $dsn = "mysql:host=localhost;charset=utf8;dbname=db99";
     protected $pdo;
     protected $table;
     
     public function __construct($table)
     {
         $this->table=$table;
-        //$this->pdo=new PDO($this->dsn,'s1120401','s1120401');
         $this->pdo=new PDO($this->dsn,'root','');
     }
 
@@ -52,7 +50,9 @@ class DB{
             $sql .= " where " . join(" && ", $tmp);
         } else if (is_numeric($id)) {
             $sql .= " where `id`='$id'";
-        } 
+        } else {
+            echo "錯誤:參數的資料型態比須是數字或陣列";
+        }
         //echo 'find=>'.$sql;
         $row = $this->pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
         return $row;
@@ -64,7 +64,9 @@ class DB{
     
             if (!empty($array)) {
                 $tmp = $this->a2s($array);
-            } 
+            } else {
+                echo "錯誤:缺少要編輯的欄位陣列";
+            }
         
             $sql .= join(",", $tmp);
             $sql .= " where `id`='{$array['id']}'";
@@ -88,7 +90,9 @@ class DB{
             $sql .= join(" && ", $tmp);
         } else if (is_numeric($id)) {
             $sql .= " `id`='$id'";
-        } 
+        } else {
+            echo "錯誤:參數的資料型態比須是數字或陣列";
+        }
         //echo $sql;
     
         return $this->pdo->exec($sql);
@@ -127,7 +131,9 @@ class DB{
             // echo 'all=>'.$sql;
             // $rows = $this->pdo->query($sql)->fetchColumn();
             return $sql;
-        } 
+        } else {
+            echo "錯誤:沒有指定的資料表名稱";
+        }
     }
 
 }
@@ -137,12 +143,51 @@ function dd($array)
     echo "<pre>";
     print_r($array);
     echo "</pre>";
+    // 跳出程式，下方程式不執行
+    // exit();
 }
+
 function to($url){
     header("location:$url");
 }
 
-$Student=new DB('students');
-$Class=new DB('classes');
-$ClassStudent=new DB('class_student');
+$Title=new DB('titles');
+$Total=new DB('total');
+$Bottom=new DB('bottom');
+$Ad=new DB('ad');
+$Mvim=new DB('mvim');
+$Image=new DB('image');
+$News=new DB('news');
+$Admin=new DB('admin');
+$Menu=new DB('menu');
+
+//使用下列方法時，要注意之後變數的取名不能重複
+//get_defined_vars()：將自定義的變數以陣列列出
+// $tables=array_keys(get_defined_vars());
+//
+// if(isset($_GET['do'])){
+//     $key=ucfirst($_GET['do']);
+//     if(in_array($key,$tables)){
+//         $DB=$$key;
+//     }
+// }else{
+//     $DB=$Title;
+// }
+
+if (isset($_GET['do'])) {
+    
+    if (isset(${ucfirst($_GET['do'])})) {
+        $DB = ${ucfirst($_GET['do'])};
+    }
+
+} else {
+    $DB = $Title;
+}
+
+// 增加進站人數檢查
+if(!isset($_SESSION['visited'])){
+    $Total->q("update `total` set `total`=`total`+1 where `id`=1");
+    $_SESSION['visted']=1;
+}
+
 ?>
